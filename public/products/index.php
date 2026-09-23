@@ -14,14 +14,19 @@ $sql = "
         p.StockQuantity,
         p.IsActive,
         c.CategoryName,
-        s.SupplierName
+        s.SupplierName,
+        pi.ImageFile,
+        pi.AltText
     FROM
         products AS p,
         categories AS c,
-        suppliers AS s
+        suppliers AS s,
+        product_images AS pi
     WHERE
         p.CategoryID = c.CategoryID
         AND p.SupplierID = s.SupplierID
+        AND p.ProductID = pi.ProductID
+        AND pi.IsPrimary = 1
     ORDER BY
         p.ProductID
 ";
@@ -107,13 +112,29 @@ require_once '/var/www/src/includes/navbar.php';
                     </td>
 
                     <td>
-                        <a href="#" class="btn btn-sm btn-warning">
+                        <a href="/products/edit.php?id=<?= $product['ProductID'] ?>" class="btn btn-sm btn-warning">
                             Sửa
                         </a>
 
-                        <a href="#" class="btn btn-sm btn-danger">
-                            Xóa
-                        </a>
+                        <form
+                            action="/products/delete.php"
+                            method="post"
+                            class="d-inline"
+                            onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này?');"
+                        >
+                            <input
+                                type="hidden"
+                                name="id"
+                                value="<?= $product['ProductID'] ?>"
+                            >
+
+                            <button
+                                type="submit"
+                                class="btn btn-sm btn-danger"
+                            >
+                                Xóa
+                            </button>
+                        </form>
                     </td>
 
                 </tr>
