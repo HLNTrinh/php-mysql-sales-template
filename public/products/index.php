@@ -63,15 +63,28 @@ require_once '/var/www/src/includes/navbar.php';
                     <th>Tồn kho</th>
                     <th>Trạng thái</th>
                     <th>Thao tác</th>
+                    <th>Hình ảnh</th>
                 </tr>
             </thead>
 
             <tbody>
 
             <?php while ($product = $result->fetch_assoc()): ?>
+                <?php
+                    $imageFile = $product['ImageFile'] ?? '';
+                    $altText = $product['AltText'] ?? $product['ProductName'];
+                    ?>
 
+                    <td>
+                        <img
+                            src="/uploads/products/<?= htmlspecialchars($imageFile) ?>"
+                            alt="<?= htmlspecialchars($altText) ?>"
+                            width="80"
+                            class="img-thumbnail"
+                        >
+                    </td>
                 <tr>
-
+                    
                     <td><?= htmlspecialchars($product['ProductCode']) ?></td>
 
                     <td><?= htmlspecialchars($product['ProductName']) ?></td>
