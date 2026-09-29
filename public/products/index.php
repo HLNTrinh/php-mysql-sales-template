@@ -63,7 +63,7 @@ require_once '/var/www/src/includes/navbar.php';
                 <tr>
                      <td>
                     <img
-                        src="public/uploads/products<?= htmlspecialchars($imageFile) ?>"
+                        src="/uploads/products/<?= htmlspecialchars($imageFile) ?>"
                         alt="<?= htmlspecialchars($altText) ?>"
                         width="80"
                         class="img-thumbnail"
