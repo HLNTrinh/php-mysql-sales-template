@@ -6,40 +6,28 @@ require_once '/var/www/src/config/database.php';
 
 $sql = "
     SELECT
-        p.ProductID,
-        p.ProductCode,
-        p.ProductName,
-        p.Unit,
-        p.Price,
-        p.StockQuantity,
-        p.IsActive,
-        c.CategoryName,
-        s.SupplierName,
-        pi.ImageFile,
-        pi.AltText
-    FROM
-        products AS p,
-        categories AS c,
-        suppliers AS s,
-        product_images AS pi
-    WHERE
-        p.CategoryID = c.CategoryID
-        AND p.SupplierID = s.SupplierID
-        AND p.ProductID = pi.ProductID
-        AND pi.IsPrimary = 1
-    ORDER BY
-        p.ProductID
+    p.ProductID,
+    p.ProductCode,
+    p.ProductName,
+    p.Unit,
+    p.Price,
+    p.StockQuantity,
+    p.IsActive,
+    c.CategoryName,
+    s.SupplierName
+FROM products AS p
+INNER JOIN categories AS c
+    ON p.CategoryID = c.CategoryID
+INNER JOIN suppliers AS s
+    ON p.SupplierID = s.SupplierID
+ORDER BY
+    p.ProductID;
 ";
-
 $result = $conn->query($sql);
-
 require_once '/var/www/src/includes/header.php';
 require_once '/var/www/src/includes/navbar.php';
-
 ?>
-
 <div class="container mt-4">
-
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Quản lý sản phẩm</h2>
 
@@ -54,6 +42,7 @@ require_once '/var/www/src/includes/navbar.php';
 
             <thead class="table-dark">
                 <tr>
+                    <th>Hình ảnh</th>
                     <th>Mã SP</th>
                     <th>Tên sản phẩm</th>
                     <th>Danh mục</th>
@@ -63,28 +52,24 @@ require_once '/var/www/src/includes/navbar.php';
                     <th>Tồn kho</th>
                     <th>Trạng thái</th>
                     <th>Thao tác</th>
-                    <th>Hình ảnh</th>
                 </tr>
             </thead>
-
             <tbody>
-
             <?php while ($product = $result->fetch_assoc()): ?>
-                <?php
-                    $imageFile = $product['ImageFile'] ?? '';
-                    $altText = $product['AltText'] ?? $product['ProductName'];
-                    ?>
-
-                    <td>
-                        <img
-                            src="/uploads/products/<?= htmlspecialchars($imageFile) ?>"
-                            alt="<?= htmlspecialchars($altText) ?>"
-                            width="80"
-                            class="img-thumbnail"
-                        >
-                    </td>
+              <?php
+                $imageFile = $product['ImageFile'] ?? '';
+                $altText = $product['AltText'] ?? $product['ProductName'];
+                ?>
                 <tr>
-                    
+                     <td>
+                    <img
+                        src="public/uploads/products<?= htmlspecialchars($imageFile) ?>"
+                        alt="<?= htmlspecialchars($altText) ?>"
+                        width="80"
+                        class="img-thumbnail"
+                    >
+                    </td>
+
                     <td><?= htmlspecialchars($product['ProductCode']) ?></td>
 
                     <td><?= htmlspecialchars($product['ProductName']) ?></td>
@@ -147,23 +132,14 @@ require_once '/var/www/src/includes/navbar.php';
                             >
                                 Xóa
                             </button>
-                        </form>
+                        </form>                  
                     </td>
-
                 </tr>
-
             <?php endwhile; ?>
-
             </tbody>
-
         </table>
-
     </div>
-
 </div>
-
 <?php
-
 require_once '/var/www/src/includes/footer.php';
-
 $conn->close();
