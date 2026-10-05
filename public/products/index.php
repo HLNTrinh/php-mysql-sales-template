@@ -3,25 +3,29 @@
 $pageTitle = 'Quản lý sản phẩm';
 
 require_once '/var/www/src/config/database.php';
-
 $sql = "
     SELECT
-    p.ProductID,
-    p.ProductCode,
-    p.ProductName,
-    p.Unit,
-    p.Price,
-    p.StockQuantity,
-    p.IsActive,
-    c.CategoryName,
-    s.SupplierName
-FROM products AS p
-INNER JOIN categories AS c
-    ON p.CategoryID = c.CategoryID
-INNER JOIN suppliers AS s
-    ON p.SupplierID = s.SupplierID
-ORDER BY
-    p.ProductID;
+        p.ProductID,
+        p.ProductCode,
+        p.ProductName,
+        p.Unit,
+        p.Price,
+        p.StockQuantity,
+        p.IsActive,
+        c.CategoryName,
+        s.SupplierName,
+        pi.ImageFile,
+        pi.AltText
+    FROM products AS p
+    INNER JOIN categories AS c
+        ON p.CategoryID = c.CategoryID
+    INNER JOIN suppliers AS s
+        ON p.SupplierID = s.SupplierID
+    LEFT JOIN product_images AS pi
+        ON p.ProductID = pi.ProductID
+        AND pi.IsPrimary = TRUE
+    ORDER BY
+        p.ProductID;
 ";
 $result = $conn->query($sql);
 require_once '/var/www/src/includes/header.php';
