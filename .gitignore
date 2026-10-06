@@ -1,2 +1,4 @@
 # Local environment configuration
 .env
+# Runtime product uploads
+public/uploads/products/product-*
