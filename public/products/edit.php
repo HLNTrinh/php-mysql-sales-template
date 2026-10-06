@@ -144,6 +144,136 @@
     $imageCount = 0;
     $nextSortOrder = 0;
 
+    if (isset($_POST['delete_image'])) {
+        $imageID = (int) $_POST['delete_image'];
+
+        try {
+            $conn->begin_transaction();
+
+            $sqlImage = "
+                SELECT
+                    ProductImageID,
+                    ImageFile,
+                    IsPrimary,
+                    SortOrder
+                FROM product_images
+                WHERE ProductImageID = ?
+                  AND ProductID = ?
+            ";
+
+            $stmtImage = $conn->prepare($sqlImage);
+            $stmtImage->bind_param(
+                'ii',
+                $imageID,
+                $productID
+            );
+            $stmtImage->execute();
+
+            $imageToDelete =
+                $stmtImage->get_result()->fetch_assoc();
+
+            $stmtImage->close();
+
+            if (!$imageToDelete) {
+                throw new Exception(
+                    'Không tìm thấy ảnh cần xóa.'
+                );
+            }
+
+            $sqlDelete = "
+                DELETE FROM product_images
+                WHERE ProductImageID = ?
+                  AND ProductID = ?
+            ";
+
+            $stmtDelete = $conn->prepare($sqlDelete);
+            $stmtDelete->bind_param(
+                'ii',
+                $imageID,
+                $productID
+            );
+            $stmtDelete->execute();
+
+            if ($stmtDelete->affected_rows !== 1) {
+                throw new Exception(
+                    'Không thể xóa ảnh.'
+                );
+            }
+
+            $stmtDelete->close();
+
+            if ((int) $imageToDelete['IsPrimary'] === 1) {
+                $sqlNewPrimary = "
+                    UPDATE product_images
+                    SET IsPrimary = 1
+                    WHERE ProductImageID = (
+                        SELECT ProductImageID
+                        FROM (
+                            SELECT ProductImageID
+                            FROM product_images
+                            WHERE ProductID = ?
+                            ORDER BY
+                                SortOrder,
+                                ProductImageID
+                            LIMIT 1
+                        ) AS remaining_images
+                    )
+                ";
+
+                $stmtNewPrimary =
+                    $conn->prepare($sqlNewPrimary);
+
+                $stmtNewPrimary->bind_param(
+                    'i',
+                    $productID
+                );
+
+                $stmtNewPrimary->execute();
+                $stmtNewPrimary->close();
+            }
+
+            $deletedSortOrder =
+                (int) $imageToDelete['SortOrder'];
+
+            $sqlReorder = "
+                UPDATE product_images
+                SET SortOrder = SortOrder - 1
+                WHERE ProductID = ?
+                  AND SortOrder > ?
+            ";
+
+            $stmtReorder = $conn->prepare($sqlReorder);
+            $stmtReorder->bind_param(
+                'ii',
+                $productID,
+                $deletedSortOrder
+            );
+            $stmtReorder->execute();
+            $stmtReorder->close();
+
+            $conn->commit();
+
+            $filePath =
+                '/var/www/html/uploads/products/'
+                . $imageToDelete['ImageFile'];
+
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+
+            header(
+                'Location: /products/edit.php?id='
+                . $productID
+                . '&image_deleted=1'
+            );
+            exit;
+
+        } catch (Throwable $e) {
+            $conn->rollback();
+            $error = $e->getMessage();
+        }
+    }
+
     if (isset($_POST['add_images'])) {
 
     $files = $_FILES['product_images'] ?? null;
@@ -348,135 +478,6 @@
             $stmtInsertImage->close();
 
             $conn->commit();
-if (isset($_POST['delete_image'])) {
-    $imageID = (int) $_POST['delete_image'];
-
-    try {
-        $conn->begin_transaction();
-
-        $sqlImage = "
-            SELECT
-                ProductImageID,
-                ImageFile,
-                IsPrimary,
-                SortOrder
-            FROM product_images
-            WHERE ProductImageID = ?
-              AND ProductID = ?
-        ";
-
-        $stmtImage = $conn->prepare($sqlImage);
-        $stmtImage->bind_param(
-            'ii',
-            $imageID,
-            $productID
-        );
-        $stmtImage->execute();
-
-        $imageToDelete =
-            $stmtImage->get_result()->fetch_assoc();
-
-        $stmtImage->close();
-
-        if (!$imageToDelete) {
-            throw new Exception(
-                'Không tìm thấy ảnh cần xóa.'
-            );
-        }
-
-        $sqlDelete = "
-            DELETE FROM product_images
-            WHERE ProductImageID = ?
-              AND ProductID = ?
-        ";
-
-        $stmtDelete = $conn->prepare($sqlDelete);
-        $stmtDelete->bind_param(
-            'ii',
-            $imageID,
-            $productID
-        );
-        $stmtDelete->execute();
-
-        if ($stmtDelete->affected_rows !== 1) {
-            throw new Exception(
-                'Không thể xóa ảnh.'
-            );
-        }
-
-        $stmtDelete->close();
-
-        if ((int) $imageToDelete['IsPrimary'] === 1) {
-            $sqlNewPrimary = "
-                UPDATE product_images
-                SET IsPrimary = 1
-                WHERE ProductImageID = (
-                    SELECT ProductImageID
-                    FROM (
-                        SELECT ProductImageID
-                        FROM product_images
-                        WHERE ProductID = ?
-                        ORDER BY
-                            SortOrder,
-                            ProductImageID
-                        LIMIT 1
-                    ) AS remaining_images
-                )
-            ";
-
-            $stmtNewPrimary =
-                $conn->prepare($sqlNewPrimary);
-
-            $stmtNewPrimary->bind_param(
-                'i',
-                $productID
-            );
-
-            $stmtNewPrimary->execute();
-            $stmtNewPrimary->close();
-        }
-
-        $deletedSortOrder =
-            (int) $imageToDelete['SortOrder'];
-
-        $sqlReorder = "
-            UPDATE product_images
-            SET SortOrder = SortOrder - 1
-            WHERE ProductID = ?
-              AND SortOrder > ?
-        ";
-
-        $stmtReorder = $conn->prepare($sqlReorder);
-        $stmtReorder->bind_param(
-            'ii',
-            $productID,
-            $deletedSortOrder
-        );
-        $stmtReorder->execute();
-        $stmtReorder->close();
-
-        $conn->commit();
-
-        $filePath =
-            '/var/www/html/uploads/products/'
-            . $imageToDelete['ImageFile'];
-
-        if (file_exists($filePath)) {
-            unlink($filePath);
-        }
-
-        header(
-            'Location: /products/edit.php?id='
-            . $productID
-            . '&image_deleted=1'
-        );
-        exit;
-
-    } catch (Throwable $e) {
-        $conn->rollback();
-        $error = $e->getMessage();
-    }
-}
 
             header(
                 'Location: /products/edit.php?id=' .
@@ -959,9 +960,7 @@ if (isset($_POST['delete_image'])) {
                     >
                         Đặt làm ảnh chính
                     </button>
-                    </div>
-                    <?php endif; ?>
-                    <button
+                       <button
                         type="submit"
                         class="btn btn-outline-danger btn-sm ms-2"
                         name="delete_image"
@@ -972,6 +971,8 @@ if (isset($_POST['delete_image'])) {
                     >
                         Xóa ảnh
                     </button>
+                    </div>
+                    <?php endif; ?>
                     <?php if (
                         isset($_GET['primary_updated'])
                         && $_GET['primary_updated'] === '1'
