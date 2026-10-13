@@ -7,7 +7,7 @@ $pageTitle = 'Xóa sản phẩm';
 
 require_once '/var/www/src/config/database.php';
 
-$productID = (int) ($_GET['id'] ?? 0);
+$productID = (int) ($_POST['id'] ?? 0);
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
