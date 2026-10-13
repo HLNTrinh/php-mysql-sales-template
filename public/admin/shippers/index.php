@@ -27,7 +27,7 @@ require_once '/var/www/src/includes/admin/navbar.php';
 
         <h2>Quản lý đơn vị vận chuyển</h2>
 
-        <a href="/shippers/create.php" class="btn btn-primary">
+        <a href="/admin/shippers/create.php" class="btn btn-primary">
             Thêm đơn vị vận chuyển
         </a>
 
@@ -69,14 +69,14 @@ require_once '/var/www/src/includes/admin/navbar.php';
                         <td>
 
                             <a
-                                href="/shippers/edit.php?id=<?= (int) $shipper['ShipperID'] ?>"
+                                href="/admin/shippers/edit.php?id=<?= (int) $shipper['ShipperID'] ?>"
                                 class="btn btn-sm btn-warning"
                             >
                                 Sửa
                             </a>
 
                             <form
-                                action="/shippers/delete.php"
+                                action="/admin/shippers/delete.php"
                                 method="post"
                                 class="d-inline"
                                 onsubmit="return confirm('Bạn có chắc muốn xóa đơn vị vận chuyển này?');"

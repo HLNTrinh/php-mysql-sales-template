@@ -118,6 +118,7 @@ require_once '/var/www/src/includes/admin/navbar.php';
                             Sửa
                         </a>
 
+                       
                         <form
                             action="/products/delete.php"
                             method="post"
@@ -127,16 +128,13 @@ require_once '/var/www/src/includes/admin/navbar.php';
                             <input
                                 type="hidden"
                                 name="id"
-                                value="<?= $product['ProductID'] ?>"
+                                value="<?= (int) $product['ProductID'] ?>"
                             >
 
-                            <button
-                                type="submit"
-                                class="btn btn-sm btn-danger"
-                            >
+                            <button type="submit" class="btn btn-sm btn-danger">
                                 Xóa
                             </button>
-                        </form>                  
+                        </form>
                     </td>
                 </tr>
             <?php endwhile; ?>

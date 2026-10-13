@@ -37,7 +37,7 @@
                 </li>
                 <li class="nav-item">
                 <a class="nav-link" href="/admin/shippers/">
-                    Người giao hàng
+                    Đơn vị vận chuyển
                 </a>
                 </li>
                 <li class="nav-item">
