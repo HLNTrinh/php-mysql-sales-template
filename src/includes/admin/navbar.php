@@ -31,7 +31,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="/admin/orders/">
                         Đơn hàng
                     </a>
                 </li>
@@ -46,5 +46,7 @@
                     </a>
             </ul>
         </div>
+        
     </div>
+
 </nav>
