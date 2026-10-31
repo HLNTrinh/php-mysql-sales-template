@@ -26,7 +26,7 @@ $keyword = isset($_GET['keyword'])
     ? trim($_GET['keyword'])
     : '';
 
-$itemsPerPage = 6;
+$itemsPerPage = 10;
 
 $page = isset($_GET['page'])
     ? max(1, (int) $_GET['page'])
@@ -205,18 +205,17 @@ require_once '/var/www/src/includes/frontend/navbar.php';
     <!-- 8. Danh sách sản phẩm -->
     <?php if ($result->num_rows > 0): ?>
 
-        <div class="row g-4">
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3">
 
             <?php while ($product = $result->fetch_assoc()): ?>
 
-                <div class="col-md-6 col-lg-4">
+                <div class="col">
                     <div class="card h-100">
 
                         <?php if (!empty($product['ImageFile'])): ?>
 
                             <div
-                                class="bg-light d-flex align-items-center justify-content-center p-3"
-                                style="height: 260px;"
+                                class="bg-white" style="aspect-ratio: 1 / 1;"
                             >
                                 <img
                                     src="/uploads/products/<?= htmlspecialchars(
@@ -236,8 +235,8 @@ require_once '/var/www/src/includes/frontend/navbar.php';
                         <?php else: ?>
 
                             <div
-                                class="bg-light d-flex align-items-center justify-content-center text-muted"
-                                style="height: 260px;"
+                                 class="bg-light d-flex align-items-center justify-content-center text-muted"
+                                style="aspect-ratio: 1 / 1;"
                             >
                                 Chưa có hình ảnh
                             </div>
@@ -254,12 +253,22 @@ require_once '/var/www/src/includes/frontend/navbar.php';
                                 ) ?>
                             </p>
 
-                            <h5 class="card-title">
+                            <h5 class="card-title"
+                            title="<?= htmlspecialchars($product['ProductName'], ENT_QUOTES, 'UTF-8') ?>"
+                            style="
+                                    display: -webkit-box;
+                                    -webkit-line-clamp: 2;
+                                    -webkit-box-orient: vertical;
+                                    overflow: hidden;
+                                    min-height: 4.5em;
+                                "
+                            >
                                 <?= htmlspecialchars(
                                     $product['ProductName'],
                                     ENT_QUOTES,
                                     'UTF-8'
                                 ) ?>
+        
                             </h5>
 
                             <p class="text-muted small">
