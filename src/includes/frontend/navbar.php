@@ -2,6 +2,14 @@
 $cartCount = array_sum($_SESSION['cart'] ?? []);
 $isLoggedIn = isset($_SESSION['customer_id']);
 $customerName = $_SESSION['customer_name'] ?? '';
+$currentPage = basename($_SERVER['SCRIPT_NAME'] ?? '');
+$isHomePage = $currentPage === 'index.php';
+$isProductsPage = in_array(
+    $currentPage,
+    ['products.php', 'product-detail.php'],
+    true
+);
+$isCartPage = $currentPage === 'cart.php';
 ?>
 
 <nav class="navbar navbar-expand-lg sticky-top bg-white shadow-sm border-bottom">
@@ -29,34 +37,58 @@ $customerName = $_SESSION['customer_name'] ?? '';
         <div class="collapse navbar-collapse" id="frontendNavbar">
 
             <!-- Menu chính -->
-            <ul class="navbar-nav mx-auto gap-lg-2 mt-3 mt-lg-0">
+            <ul class="navbar-nav me-lg-3 gap-lg-2 mt-3 mt-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link px-3 rounded-3 text-dark fw-medium"
-                       href="/">
+                    <a
+                       class="nav-link px-3 rounded-3 text-dark fw-medium<?= $isHomePage ? ' is-active' : '' ?>"
+                       href="/"
+                       <?= $isHomePage ? 'aria-current="page"' : '' ?>
+                    >
                         <i class="bi bi-house-door me-1"></i>
                         Trang chủ
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link px-3 rounded-3 text-dark fw-medium"
-                       href="/products.php">
+                    <a
+                       class="nav-link px-3 rounded-3 text-dark fw-medium<?= $isProductsPage ? ' is-active' : '' ?>"
+                       href="/products.php"
+                       <?= $isProductsPage ? 'aria-current="page"' : '' ?>
+                    >
                         <i class="bi bi-grid me-1"></i>
                         Sản phẩm
                     </a>
                 </li>
             </ul>
 
+            <form
+                action="/products.php"
+                method="get"
+                class="navbar-search"
+                role="search"
+                aria-label="Tìm sản phẩm"
+            >
+                <input
+                    type="search"
+                    name="keyword"
+                    class="form-control"
+                    placeholder="Tìm sản phẩm..."
+                    aria-label="Nhập tên hoặc mã sản phẩm"
+                >
+            </form>
+
             <!-- Giỏ hàng và tài khoản -->
             <div class="d-flex align-items-center flex-wrap gap-2 mt-3 mt-lg-0">
 
-                <a class="btn btn-outline-primary rounded-pill px-3"
-                   href="/cart.php">
-                    <i class="bi bi-cart3 me-1"></i>
-                    Giỏ hàng
-                    <span class="badge rounded-pill bg-primary ms-1">
-                        <?= (int) $cartCount ?>
-                    </span>
+                <a class="nav-link px-3 rounded-3 text-dark fw-medium navbar-cart-link<?= $isCartPage ? ' is-active' : '' ?>"
+                   href="/cart.php"
+                   aria-label="Giỏ hàng, <?= (int) $cartCount ?> sản phẩm"
+                   <?= $isCartPage ? 'aria-current="page"' : '' ?>>
+                   <i class="bi bi-cart3" aria-hidden="true"></i>
+                   <span class="navbar-cart-label">Giỏ hàng</span>
+                   <span class="navbar-cart-count badge rounded-pill bg-primary">
+                       <?= (int) $cartCount ?>
+                   </span>
                 </a>
 
                 <?php if ($isLoggedIn): ?>
@@ -116,6 +148,18 @@ $customerName = $_SESSION['customer_name'] ?? '';
         transition: background-color 0.2s ease, color 0.2s ease;
     }
 
+    .navbar .nav-link.is-active {
+        color: #0d6efd !important;
+        text-decoration: underline;
+        text-decoration-color: #0d6efd;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 6px;
+    }
+
+    .navbar .navbar-cart-link.is-active {
+        text-decoration: none;
+    }
+
     .navbar .nav-link:hover {
         background-color: #f0f4ff;
         color: #0d6efd !important;
@@ -131,9 +175,85 @@ $customerName = $_SESSION['customer_name'] ?? '';
         transform: translateY(-1px);
     }
 
+    .navbar-cart-link {
+        position: relative;
+        display: inline-flex;
+        min-height: 42px;
+        height: 42px;
+        align-items: center;
+        gap: 7px;
+        margin-right: 4px;
+        white-space: nowrap;
+    }
+
+    .navbar-cart-count {
+        padding: 3px 6px;
+        font-size: 10px;
+        line-height: 1;
+    }
+
+    .navbar-cart-link > i {
+        font-size: 20px;
+    }
+
+    .navbar-search {
+        width: min(250px, 100%);
+        margin-right: 14px;
+    }
+
+    .navbar-search .form-control {
+        min-width: 0;
+        border-color: #e2e7f0;
+        border-radius: 999px;
+        font-size: 13px;
+    }
+
+    @media (min-width: 992px) and (max-width: 1199.98px) {
+        .navbar-brand {
+            font-size: 16px;
+        }
+
+        #frontendNavbar .navbar-nav {
+            gap: 0 !important;
+        }
+
+        #frontendNavbar .navbar-nav .nav-link {
+            padding-right: 0.5rem !important;
+            padding-left: 0.5rem !important;
+            white-space: nowrap;
+        }
+
+        .navbar-search {
+            width: 145px;
+            margin-right: 6px;
+        }
+
+        .navbar .d-flex.flex-wrap {
+            flex-wrap: nowrap !important;
+            gap: 0.35rem !important;
+        }
+
+        .navbar .d-flex.flex-wrap .btn {
+            padding-right: 0.55rem;
+            padding-left: 0.55rem;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .navbar-cart-link {
+            height: 34px;
+            margin-right: 2px;
+        }
+    }
+
     @media (max-width: 991.98px) {
         .navbar .navbar-nav {
             padding-bottom: 12px;
+        }
+
+        .navbar-search {
+            width: 100%;
+            margin: 0 0 10px;
         }
 
         .navbar .d-flex.flex-wrap {
