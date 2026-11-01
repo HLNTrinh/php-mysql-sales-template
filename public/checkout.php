@@ -430,194 +430,426 @@ require_once '/var/www/src/includes/frontend/header.php';
 require_once '/var/www/src/includes/frontend/navbar.php';
 ?>
 
-<div class="container py-4">
+<main class="checkout-page">
+    <div class="container checkout-container">
+        <a class="checkout-back-link" href="/cart.php">
+            <i class="bi bi-chevron-left" aria-hidden="true"></i>
+            Giỏ hàng
+        </a>
 
-    <h1 class="h3 mb-4">Đặt hàng</h1>
+        <?php if ($errorMessage !== ''): ?>
+            <div class="alert alert-danger checkout-error" role="alert">
+                <?= htmlspecialchars($errorMessage, ENT_QUOTES, 'UTF-8') ?>
+            </div>
+        <?php endif; ?>
 
-    <?php if ($errorMessage !== ''): ?>
-        <div class="alert alert-danger">
-            <?= htmlspecialchars(
-                $errorMessage,
-                ENT_QUOTES,
-                'UTF-8'
-            ) ?>
-        </div>
-    <?php endif; ?>
+        <form method="post" class="checkout-layout">
+            <div class="checkout-details">
+                <section class="checkout-card">
+                    <h1>Thông tin khách hàng</h1>
+                    <div class="checkout-customer-grid">
+                        <div class="checkout-readonly-field">
+                            <span>Họ tên</span>
+                            <strong><?= htmlspecialchars($customerName, ENT_QUOTES, 'UTF-8') ?></strong>
+                        </div>
+                        <div class="checkout-readonly-field">
+                            <span>Số điện thoại</span>
+                            <strong><?= htmlspecialchars($phone, ENT_QUOTES, 'UTF-8') ?></strong>
+                        </div>
+                        <div class="checkout-readonly-field checkout-email-field">
+                            <span>Email</span>
+                            <strong><?= htmlspecialchars($email, ENT_QUOTES, 'UTF-8') ?></strong>
+                        </div>
+                    </div>
+                </section>
 
-    <div class="row g-4">
-
-        <div class="col-lg-7">
-            <div class="card shadow-sm">
-                <div class="card-body">
-
-                    <h2 class="h5 mb-3">
-                        Thông tin khách hàng
-                    </h2>
-
-                    <form method="post">
-
-                        <div class="mb-3">
-                            <label class="form-label">
-                                Họ và tên
-                            </label>
-
+                <section class="checkout-card">
+                    <h2>Thông tin nhận hàng</h2>
+                    <div class="checkout-form-grid">
+                        <div class="checkout-field">
+                            <label for="recipient_name">Tên người nhận</label>
                             <input
                                 type="text"
                                 class="form-control"
-                                value="<?= htmlspecialchars(
-                                    $customerName,
-                                    ENT_QUOTES,
-                                    'UTF-8'
-                                ) ?>"
+                                id="recipient_name"
+                                value="<?= htmlspecialchars($customerName, ENT_QUOTES, 'UTF-8') ?>"
                                 readonly
                             >
                         </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">
-                                Email
-                            </label>
-
-                            <input
-                                type="email"
-                                class="form-control"
-                                value="<?= htmlspecialchars(
-                                    $email,
-                                    ENT_QUOTES,
-                                    'UTF-8'
-                                ) ?>"
-                                readonly
-                            >
-                        </div>
-
-                        <div class="mb-3">
-                            <label
-                                for="phone"
-                                class="form-label"
-                            >
-                                Số điện thoại
-                            </label>
-
+                        <div class="checkout-field">
+                            <label for="phone">Số điện thoại người nhận</label>
                             <input
                                 type="tel"
                                 class="form-control"
                                 id="phone"
                                 name="phone"
-                                value="<?= htmlspecialchars(
-                                    $phone,
-                                    ENT_QUOTES,
-                                    'UTF-8'
-                                ) ?>"
+                                value="<?= htmlspecialchars($phone, ENT_QUOTES, 'UTF-8') ?>"
+                                autocomplete="tel"
                                 required
                             >
                         </div>
-
-                        <div class="mb-3">
-                            <label
-                                for="address"
-                                class="form-label"
-                            >
-                                Địa chỉ giao hàng
-                            </label>
-
+                        <div class="checkout-field checkout-full-width">
+                            <label for="address">Địa chỉ giao hàng</label>
                             <textarea
                                 class="form-control"
                                 id="address"
                                 name="address"
                                 rows="3"
+                                autocomplete="street-address"
                                 required
-                            ><?= htmlspecialchars(
-                                $address,
-                                ENT_QUOTES,
-                                'UTF-8'
-                            ) ?></textarea>
+                            ><?= htmlspecialchars($address, ENT_QUOTES, 'UTF-8') ?></textarea>
                         </div>
-
-                        <button
-                            type="submit"
-                            name="place_order"
-                            value="1"
-                            class="btn btn-success"
-                        >
-                            Xác nhận đặt hàng
-                        </button>
-
-                    </form>
-
-                </div>
+                    </div>
+                </section>
             </div>
-        </div>
 
-        <div class="col-lg-5">
-            <div class="card shadow-sm">
-                <div class="card-body">
-
-                    <h2 class="h5 mb-3">
-                        Đơn hàng của bạn
-                    </h2>
-
-                    <?php foreach ($cartItems as $item): ?>
-                        <div class="d-flex justify-content-between border-bottom py-2">
-
-                            <div>
-                                <strong>
-                                    <?= htmlspecialchars(
-                                        $item['ProductName'],
-                                        ENT_QUOTES,
-                                        'UTF-8'
-                                    ) ?>
-                                </strong>
-
-                                <div class="small text-muted">
-                                    <?= (int) $item['Quantity'] ?>
-                                    ×
-                                    <?= number_format(
-                                        (float) $item['Price'],
-                                        0,
-                                        ',',
-                                        '.'
-                                    ) ?> đ
-                                </div>
-                            </div>
-
-                            <div>
-                                <?= number_format(
-                                    (float) $item['Subtotal'],
-                                    0,
-                                    ',',
-                                    '.'
-                                ) ?> đ
-                            </div>
-
-                        </div>
-                    <?php endforeach; ?>
-
-                    <div class="d-flex justify-content-between fw-bold fs-5 pt-3">
-                        <span>Tổng cộng</span>
-
-                        <span>
-                            <?= number_format(
-                                (float) $total,
-                                0,
-                                ',',
-                                '.'
-                            ) ?> đ
-                        </span>
+            <aside class="checkout-order-column" aria-label="Thông tin đơn hàng">
+                <section class="checkout-card checkout-order-card">
+                    <div class="checkout-order-heading">
+                        <h2>Đơn hàng</h2>
+                        <span>Sản phẩm trong giỏ hàng</span>
                     </div>
 
-                    <a
-                        href="/cart.php"
-                        class="btn btn-outline-secondary mt-3"
+                    <div class="checkout-order-table-heading">
+                        <span>Sản phẩm</span>
+                        <span>Thành tiền</span>
+                    </div>
+
+                    <div class="checkout-order-items">
+                        <?php foreach ($cartItems as $item): ?>
+                            <div class="checkout-order-item">
+                                <div class="checkout-order-product">
+                                    <strong><?= htmlspecialchars($item['ProductName'], ENT_QUOTES, 'UTF-8') ?></strong>
+                                    <span>
+                                        Đơn giá:
+                                        <?= number_format((float) $item['Price'], 0, ',', '.') ?> đ
+                                        × <?= (int) $item['Quantity'] ?>
+                                    </span>
+                                </div>
+                                <strong class="checkout-order-subtotal">
+                                    <?= number_format((float) $item['Subtotal'], 0, ',', '.') ?> đ
+                                </strong>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <div class="checkout-total-line">
+                        <span>Tạm tính</span>
+                        <strong><?= number_format((float) $total, 0, ',', '.') ?> đ</strong>
+                    </div>
+                    <div class="checkout-total-line checkout-grand-total">
+                        <span>Tổng tiền</span>
+                        <strong><?= number_format((float) $total, 0, ',', '.') ?> đ</strong>
+                    </div>
+
+                    <button
+                        type="submit"
+                        name="place_order"
+                        value="1"
+                        class="btn btn-primary checkout-submit-button"
                     >
-                        Quay lại giỏ hàng
-                    </a>
-
-                </div>
-            </div>
-        </div>
-
+                        Đặt hàng
+                    </button>
+                    <p class="checkout-payment-note">
+                        <i class="bi bi-info-circle" aria-hidden="true"></i>
+                        Thanh toán khi nhận hàng
+                    </p>
+                </section>
+            </aside>
+        </form>
     </div>
-</div>
+</main>
+
+<style>
+    .checkout-page {
+        min-height: 65vh;
+        background: #f1f3f7;
+    }
+
+    .checkout-container {
+        max-width: 1160px;
+        padding-top: 24px;
+        padding-bottom: 56px;
+    }
+
+    .checkout-back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 18px;
+        color: #17243b;
+        font-size: 23px;
+        font-weight: 750;
+        text-decoration: none;
+    }
+
+    .checkout-back-link i {
+        font-size: 18px;
+    }
+
+    .checkout-error {
+        margin-bottom: 18px;
+        border-radius: 12px;
+    }
+
+    .checkout-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.8fr) minmax(310px, 1fr);
+        align-items: start;
+        gap: 16px;
+    }
+
+    .checkout-details,
+    .checkout-order-column {
+        display: grid;
+        gap: 14px;
+    }
+
+    .checkout-order-column {
+        position: sticky;
+        top: 96px;
+    }
+
+    .checkout-card {
+        padding: 18px;
+        border: 1px solid #e8ecf2;
+        border-radius: 14px;
+        background: #fff;
+        box-shadow: 0 4px 16px rgb(22 34 51 / 4%);
+    }
+
+    .checkout-card h1,
+    .checkout-card h2 {
+        margin: 0 0 14px;
+        color: #202d42;
+        font-size: 16px;
+        font-weight: 750;
+    }
+
+    .checkout-customer-grid,
+    .checkout-form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 22px;
+    }
+
+    .checkout-readonly-field {
+        display: grid;
+        gap: 6px;
+        min-width: 0;
+        padding: 10px 4px;
+        border-bottom: 1px solid #edf0f5;
+    }
+
+    .checkout-readonly-field span,
+    .checkout-field label {
+        color: #8490a2;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+    }
+
+    .checkout-readonly-field strong {
+        overflow-wrap: anywhere;
+        color: #35425a;
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    .checkout-email-field {
+        grid-column: 1 / -1;
+    }
+
+    .checkout-form-grid {
+        row-gap: 12px;
+    }
+
+    .checkout-field {
+        display: grid;
+        gap: 6px;
+    }
+
+    .checkout-field .form-control {
+        min-height: 40px;
+        border-color: #e4e9f0;
+        border-radius: 8px;
+        color: #35425a;
+        font-size: 13px;
+    }
+
+    .checkout-field textarea.form-control {
+        min-height: 74px;
+        resize: vertical;
+    }
+
+    .checkout-field .form-control:focus {
+        border-color: #83b7f5;
+        box-shadow: 0 0 0 3px rgb(40 126 229 / 12%);
+    }
+
+    .checkout-field .form-control[readonly] {
+        background: #f7f8fb;
+    }
+
+    .checkout-full-width {
+        grid-column: 1 / -1;
+    }
+
+    .checkout-order-card {
+        padding: 18px;
+    }
+
+    .checkout-order-heading {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .checkout-order-heading h2 {
+        margin-bottom: 3px;
+    }
+
+    .checkout-order-heading > span {
+        color: #8490a2;
+        font-size: 10px;
+    }
+
+    .checkout-order-table-heading,
+    .checkout-order-item {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .checkout-order-table-heading {
+        padding: 9px 0;
+        border-bottom: 1px solid #edf0f5;
+        color: #8490a2;
+        font-size: 10px;
+    }
+
+    .checkout-order-items {
+        max-height: 340px;
+        overflow-y: auto;
+    }
+
+    .checkout-order-item {
+        align-items: flex-start;
+        padding: 10px 0;
+        border-bottom: 1px solid #edf0f5;
+    }
+
+    .checkout-order-product {
+        display: grid;
+        gap: 4px;
+        min-width: 0;
+    }
+
+    .checkout-order-product strong {
+        color: #27364d;
+        font-size: 12px;
+        line-height: 1.45;
+    }
+
+    .checkout-order-product span {
+        color: #8490a2;
+        font-size: 10px;
+    }
+
+    .checkout-order-subtotal {
+        flex: 0 0 auto;
+        color: #35425a;
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
+    .checkout-total-line {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        padding-top: 11px;
+        color: #59677f;
+        font-size: 12px;
+    }
+
+    .checkout-total-line strong {
+        color: #35425a;
+        white-space: nowrap;
+    }
+
+    .checkout-grand-total {
+        padding-top: 7px;
+        color: #27364d;
+        font-weight: 700;
+    }
+
+    .checkout-grand-total strong {
+        font-size: 14px;
+    }
+
+    .checkout-submit-button {
+        width: 100%;
+        min-height: 42px;
+        margin-top: 14px;
+        border: 0;
+        border-radius: 9px;
+        background: #287ee5;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .checkout-submit-button:hover {
+        background: #176bd0;
+    }
+
+    .checkout-payment-note {
+        margin: 8px 0 0;
+        color: #8490a2;
+        font-size: 10px;
+    }
+
+    .checkout-payment-note i {
+        margin-right: 4px;
+    }
+
+    @media (max-width: 767.98px) {
+        .checkout-container {
+            padding-top: 18px;
+            padding-bottom: 36px;
+        }
+
+        .checkout-layout {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .checkout-order-column {
+            position: static;
+        }
+
+        .checkout-back-link {
+            font-size: 21px;
+        }
+    }
+
+    @media (max-width: 575.98px) {
+        .checkout-card {
+            padding: 15px;
+        }
+
+        .checkout-customer-grid,
+        .checkout-form-grid {
+            column-gap: 12px;
+        }
+
+        .checkout-order-heading {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 0;
+        }
+    }
+</style>
 
 <?php
 require_once '/var/www/src/includes/frontend/footer.php';
