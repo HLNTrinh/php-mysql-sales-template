@@ -130,129 +130,189 @@ require_once '/var/www/src/includes/frontend/navbar.php';
 
 ?>
 
-<div class="container py-4">
+<style>
+    .register-page {
+        display: flex;
+        min-height: 75vh;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 16px;
+        background: #f3f6fc;
+    }
 
-    <div class="row justify-content-center">
+    .register-card {
+        width: 100%;
+        max-width: 520px;
+        padding: 36px 40px;
+        border: 1px solid #e9ecef;
+        border-radius: 14px;
+        background: #fff;
+        box-shadow: 0 10px 35px rgba(31, 41, 55, 0.07);
+    }
 
-        <div class="col-md-7 col-lg-5">
+    .register-title {
+        margin-bottom: 28px;
+        color: #212529;
+        font-size: 36px;
+        font-weight: 800;
+        text-align: center;
+        text-transform: uppercase;
+    }
 
-            <h1 class="h3 mb-4">
-                Đăng ký tài khoản
-            </h1>
+    .register-card form {
+        margin-top: 24px;
+    }
 
-            <?php if ($errorMessage !== ''): ?>
+    .register-card .form-label {
+        margin-bottom: 8px;
+        color: #343a40;
+        font-size: 18px;
+        font-weight: 500;
+    }
 
-                <div class="alert alert-danger">
-                    <?= htmlspecialchars($errorMessage) ?>
-                </div>
+    .register-card .form-control {
+        min-height: 48px;
+        padding: 11px 14px;
+        border: 1px solid #dfe3e8;
+        border-radius: 9px;
+        color: #212529;
+        background: #fff;
+        font-size: 14px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
 
-            <?php endif; ?>
+    .register-card .form-control:focus {
+        border-color: #86a9ff;
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.12);
+    }
 
-            <form method="post">
+    .register-submit {
+        width: 100%;
+        min-height: 48px;
+        margin-top: 8px;
+        border-radius: 9px;
+        font-size: 17px;
+        font-weight: 600;
+        transition: background-color 0.2s, transform 0.2s;
+    }
 
-                <div class="mb-3">
-                    <label
-                        for="customer_name"
-                        class="form-label"
-                    >
-                        Họ và tên
-                    </label>
+    .register-submit:hover {
+        transform: translateY(-1px);
+    }
 
-                    <input
-                        type="text"
-                        class="form-control"
-                        id="customer_name"
-                        name="customer_name"
-                        value="<?= htmlspecialchars(
-                            $customerName
-                        ) ?>"
-                        required
-                    >
-                </div>
+    .register-footer {
+        margin-top: 24px;
+        color: #212529;
+        font-size: 16px;
+        text-align: center;
+    }
 
-                <div class="mb-3">
-                    <label
-                        for="phone"
-                        class="form-label"
-                    >
-                        Số điện thoại
-                    </label>
+    .register-footer a {
+        color: #0d6efd;
+        font-weight: 700;
+        text-decoration: none;
+    }
 
-                    <input
-                        type="text"
-                        class="form-control"
-                        id="phone"
-                        name="phone"
-                        value="<?= htmlspecialchars($phone) ?>"
-                    >
-                </div>
+    .register-footer a:hover {
+        text-decoration: underline;
+    }
 
-                <div class="mb-3">
-                    <label
-                        for="email"
-                        class="form-label"
-                    >
-                        Email
-                    </label>
+    @media (max-width: 575.98px) {
+        .register-page {
+            padding: 28px 14px;
+        }
 
-                    <input
-                        type="email"
-                        class="form-control"
-                        id="email"
-                        name="email"
-                        value="<?= htmlspecialchars($email) ?>"
-                        required
-                    >
-                </div>
+        .register-card {
+            padding: 28px 22px;
+        }
 
-                <div class="mb-3">
-                    <label
-                        for="password"
-                        class="form-label"
-                    >
-                        Mật khẩu
-                    </label>
+        .register-title {
+            font-size: 30px;
+        }
+    }
+</style>
 
-                    <input
-                        type="password"
-                        class="form-control"
-                        id="password"
-                        name="password"
-                        required
-                    >
-                </div>
+<main class="register-page">
+    <section class="register-card" aria-labelledby="register-title">
+        <h1 class="register-title" id="register-title">
+            Đăng ký
+        </h1>
 
-                <div class="mb-3">
-                    <label
-                        for="confirm_password"
-                        class="form-label"
-                    >
-                        Xác nhận mật khẩu
-                    </label>
+        <?php if ($errorMessage !== ''): ?>
+            <div class="alert alert-danger">
+                <?= htmlspecialchars($errorMessage, ENT_QUOTES, 'UTF-8') ?>
+            </div>
+        <?php endif; ?>
 
-                    <input
-                        type="password"
-                        class="form-control"
-                        id="confirm_password"
-                        name="confirm_password"
-                        required
-                    >
-                </div>
-
-                <button
-                    type="submit"
-                    class="btn btn-primary"
+        <form method="post">
+            <div class="mb-3">
+                <label for="customer_name" class="form-label">Họ và tên</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="customer_name"
+                    name="customer_name"
+                    value="<?= htmlspecialchars($customerName, ENT_QUOTES, 'UTF-8') ?>"
+                    required
                 >
-                    Đăng ký
-                </button>
+            </div>
 
-            </form>
+            <div class="mb-3">
+                <label for="phone" class="form-label">Số điện thoại</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="phone"
+                    name="phone"
+                    value="<?= htmlspecialchars($phone, ENT_QUOTES, 'UTF-8') ?>"
+                >
+            </div>
 
-        </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    name="email"
+                    value="<?= htmlspecialchars($email, ENT_QUOTES, 'UTF-8') ?>"
+                    required
+                >
+            </div>
 
-    </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Mật khẩu</label>
+                <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    name="password"
+                    required
+                >
+            </div>
 
-</div>
+            <div class="mb-3">
+                <label for="confirm_password" class="form-label">Xác nhận mật khẩu</label>
+                <input
+                    type="password"
+                    class="form-control"
+                    id="confirm_password"
+                    name="confirm_password"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="btn btn-primary register-submit">
+                Đăng ký
+            </button>
+        </form>
+
+        <p class="register-footer mb-0">
+            Đã có tài khoản?
+            <a href="/login.php">Đăng nhập</a>
+        </p>
+    </section>
+</main>
 
 <?php
 

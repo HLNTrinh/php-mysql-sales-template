@@ -95,14 +95,120 @@ require_once '/var/www/src/includes/frontend/header.php';
 require_once '/var/www/src/includes/frontend/navbar.php';
 
 ?>
+<style>
+    .login-page {
+        min-height: 65vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 16px;
+        background: #f3f6fc;
+    }
 
-<div class="container py-4">
+    .login-card form {
+        margin-top: 30px;
+    }
 
-    <div class="row justify-content-center">
+    .login-card {
+        width: 100%;
+        max-width: 520px;
+        background: #ffffff;
+        border: 1px solid #e9ecef;
+        border-radius: 14px;
+        padding: 36px 40px;
+        box-shadow: 0 10px 35px rgba(31, 41, 55, 0.07);
+    }
 
-        <div class="col-md-7 col-lg-5">
+    .login-title {
+        color: #212529;
+        font-size: 36px;
+        font-weight: 800;
+        letter-spacing: 0;
+        text-transform: uppercase;
+    }
 
-            <h1 class="h3 mb-4">
+    .login-description {
+        color: #6c757d;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .login-card .form-label {
+        color: #343a40;
+        font-size: 18px;
+        font-weight: 500;
+        margin-bottom: 8px;
+    }
+
+    .login-card .form-control {
+        min-height: 48px;
+        padding: 11px 14px;
+        border: 1px solid #dfe3e8;
+        border-radius: 9px;
+        color: #212529;
+        background: #ffffff;
+        font-size: 14px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .login-card .form-control:focus {
+        border-color: #86a9ff;
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.12);
+    }
+
+    .login-submit {
+        width: 100%;
+        min-height: 48px;
+        margin-top: 8px;
+        border-radius: 9px;
+        font-size: 17px;
+        font-weight: 600;
+        transition: background-color 0.2s, transform 0.2s;
+    }
+
+    .login-submit:hover {
+        transform: translateY(-1px);
+    }
+
+    .login-footer {
+        margin-top: 24px;
+        color: #212529;
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .login-footer a {
+        color: #0d6efd;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .login-footer a:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 575.98px) {
+        .login-page {
+            padding: 28px 14px;
+        }
+
+        .login-card {
+            padding: 28px 22px;
+            border-radius: 14px;
+        }
+
+        .login-title {
+            font-size: 30px;
+        }
+    }
+</style>
+
+
+    <div class="login-page">
+
+        <div class="login-card">
+
+            <h1 class="login-title text-center mb-4">
                 Đăng nhập
             </h1>
 
@@ -166,18 +272,22 @@ require_once '/var/www/src/includes/frontend/navbar.php';
 
                 <button
                     type="submit"
-                    class="btn btn-primary"
+                    class="btn btn-primary login-submit"
                 >
                     Đăng nhập
                 </button>
 
             </form>
 
+            <p class="login-footer mb-0">
+                Bạn chưa có tài khoản?
+                <a href="/register.php">Đăng ký ngay</a>
+            </p>
+
         </div>
 
     </div>
 
-</div>
 
 <?php
 
