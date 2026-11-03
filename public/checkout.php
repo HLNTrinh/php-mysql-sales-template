@@ -622,7 +622,7 @@ require_once '/var/www/src/includes/frontend/navbar.php';
     .checkout-card h2 {
         margin: 0 0 14px;
         color: #202d42;
-        font-size: 16px;
+        font-size: 20px;
         font-weight: 750;
     }
 
@@ -644,7 +644,7 @@ require_once '/var/www/src/includes/frontend/navbar.php';
     .checkout-readonly-field span,
     .checkout-field label {
         color: #8490a2;
-        font-size: 10px;
+        font-size: 14px;
         font-weight: 600;
         letter-spacing: 0.3px;
         text-transform: uppercase;
@@ -653,7 +653,7 @@ require_once '/var/www/src/includes/frontend/navbar.php';
     .checkout-readonly-field strong {
         overflow-wrap: anywhere;
         color: #35425a;
-        font-size: 13px;
+        font-size: 16px;
         font-weight: 500;
     }
 
@@ -671,15 +671,15 @@ require_once '/var/www/src/includes/frontend/navbar.php';
     }
 
     .checkout-field .form-control {
-        min-height: 40px;
+        min-height: 48px;
         border-color: #e4e9f0;
         border-radius: 8px;
         color: #35425a;
-        font-size: 13px;
+        font-size: 16px;
     }
 
     .checkout-field textarea.form-control {
-        min-height: 74px;
+        min-height: 96px;
         resize: vertical;
     }
 
@@ -713,7 +713,7 @@ require_once '/var/www/src/includes/frontend/navbar.php';
 
     .checkout-order-heading > span {
         color: #8490a2;
-        font-size: 10px;
+        font-size: 13px;
     }
 
     .checkout-order-table-heading,
@@ -727,7 +727,7 @@ require_once '/var/www/src/includes/frontend/navbar.php';
         padding: 9px 0;
         border-bottom: 1px solid #edf0f5;
         color: #8490a2;
-        font-size: 10px;
+        font-size: 13px;
     }
 
     .checkout-order-items {
@@ -749,19 +749,19 @@ require_once '/var/www/src/includes/frontend/navbar.php';
 
     .checkout-order-product strong {
         color: #27364d;
-        font-size: 12px;
+        font-size: 16px;
         line-height: 1.45;
     }
 
     .checkout-order-product span {
         color: #8490a2;
-        font-size: 10px;
+        font-size: 13px;
     }
 
     .checkout-order-subtotal {
         flex: 0 0 auto;
         color: #35425a;
-        font-size: 11px;
+        font-size: 14px;
         white-space: nowrap;
     }
 
@@ -771,7 +771,7 @@ require_once '/var/www/src/includes/frontend/navbar.php';
         gap: 10px;
         padding-top: 11px;
         color: #59677f;
-        font-size: 12px;
+        font-size: 15px;
     }
 
     .checkout-total-line strong {
@@ -786,17 +786,17 @@ require_once '/var/www/src/includes/frontend/navbar.php';
     }
 
     .checkout-grand-total strong {
-        font-size: 14px;
+        font-size: 18px;
     }
 
     .checkout-submit-button {
         width: 100%;
-        min-height: 42px;
+        min-height: 50px;
         margin-top: 14px;
         border: 0;
         border-radius: 9px;
         background: #287ee5;
-        font-size: 13px;
+        font-size: 16px;
         font-weight: 700;
     }
 
@@ -807,7 +807,7 @@ require_once '/var/www/src/includes/frontend/navbar.php';
     .checkout-payment-note {
         margin: 8px 0 0;
         color: #8490a2;
-        font-size: 10px;
+        font-size: 13px;
     }
 
     .checkout-payment-note i {
