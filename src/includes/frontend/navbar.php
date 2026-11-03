@@ -2,6 +2,8 @@
 $cartCount = array_sum($_SESSION['cart'] ?? []);
 $isLoggedIn = isset($_SESSION['customer_id']);
 $customerName = $_SESSION['customer_name'] ?? '';
+$navbarKeyword = $_GET['keyword'] ?? '';
+$navbarKeyword = is_string($navbarKeyword) ? $navbarKeyword : '';
 $currentPage = basename($_SERVER['SCRIPT_NAME'] ?? '');
 $isHomePage = $currentPage === 'index.php';
 $isProductsPage = in_array(
@@ -10,6 +12,7 @@ $isProductsPage = in_array(
     true
 );
 $isCartPage = $currentPage === 'cart.php';
+$isOrdersPage = $currentPage === 'orders.php';
 ?>
 
 <nav class="navbar navbar-expand-lg sticky-top bg-white shadow-sm border-bottom">
@@ -74,7 +77,15 @@ $isCartPage = $currentPage === 'cart.php';
                     class="form-control"
                     placeholder="Tìm sản phẩm..."
                     aria-label="Nhập tên hoặc mã sản phẩm"
+                    value="<?= htmlspecialchars($navbarKeyword, ENT_QUOTES, 'UTF-8') ?>"
                 >
+                <button
+                    type="submit"
+                    class="navbar-search-button"
+                    aria-label="Tìm kiếm"
+                >
+                    <i class="bi bi-search" aria-hidden="true"></i>
+                </button>
             </form>
 
             <!-- Giỏ hàng và tài khoản -->
@@ -90,6 +101,17 @@ $isCartPage = $currentPage === 'cart.php';
                        <?= (int) $cartCount ?>
                    </span>
                 </a>
+
+                <?php if ($isLoggedIn): ?>
+                    <a
+                       class="nav-link px-3 rounded-3 text-dark fw-medium<?= $isOrdersPage ? ' is-active' : '' ?>"
+                       href="/orders.php"
+                       <?= $isOrdersPage ? 'aria-current="page"' : '' ?>
+                    >
+                        <i class="bi bi-receipt me-1" aria-hidden="true"></i>
+                        Đơn hàng
+                    </a>
+                <?php endif; ?>
 
                 <?php if ($isLoggedIn): ?>
 
@@ -197,6 +219,7 @@ $isCartPage = $currentPage === 'cart.php';
     }
 
     .navbar-search {
+        display: flex;
         width: min(250px, 100%);
         margin-right: 14px;
     }
@@ -204,8 +227,26 @@ $isCartPage = $currentPage === 'cart.php';
     .navbar-search .form-control {
         min-width: 0;
         border-color: #e2e7f0;
-        border-radius: 999px;
+        border-radius: 999px 0 0 999px;
         font-size: 13px;
+    }
+
+    .navbar-search-button {
+        display: grid;
+        width: 42px;
+        flex: 0 0 42px;
+        place-items: center;
+        border: 1px solid #e2e7f0;
+        border-left: 0;
+        border-radius: 0 999px 999px 0;
+        background: #f7f9fc;
+        color: #53647d;
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .navbar-search-button:hover {
+        background: #287ee5;
+        color: #fff;
     }
 
     @media (min-width: 992px) and (max-width: 1199.98px) {
@@ -226,6 +267,11 @@ $isCartPage = $currentPage === 'cart.php';
         .navbar-search {
             width: 145px;
             margin-right: 6px;
+        }
+
+        .navbar-search-button {
+            width: 36px;
+            flex-basis: 36px;
         }
 
         .navbar .d-flex.flex-wrap {
